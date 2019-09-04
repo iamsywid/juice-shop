@@ -12,7 +12,7 @@ import { of, throwError } from 'rxjs'
 import { EventEmitter } from '@angular/core'
 
 class MockSocket {
-  on (str: string, callback) {
+  on (str: string, callback: Function) {
     callback()
   }
 }
@@ -20,11 +20,11 @@ class MockSocket {
 describe('ServerStartedNotificationComponent', () => {
   let component: ServerStartedNotificationComponent
   let fixture: ComponentFixture<ServerStartedNotificationComponent>
-  let challengeService
-  let translateService
-  let cookieService
-  let socketIoService
-  let mockSocket
+  let challengeService: any
+  let translateService: any
+  let cookieService: any
+  let socketIoService: any
+  let mockSocket: any
 
   beforeEach(async(() => {
 
@@ -63,7 +63,7 @@ describe('ServerStartedNotificationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ServerStartedNotificationComponent)
     component = fixture.componentInstance
-    cookieService.remove('continueCode', { domain: document.domain })
+    cookieService.remove('continueCode')
     fixture.detectChanges()
   })
 

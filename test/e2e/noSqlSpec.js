@@ -24,7 +24,7 @@ describe('/rest/products/reviews', () => {
       browser.driver.sleep(5000)
       browser.waitForAngularEnabled(true)
     })
-    protractor.expect.challengeSolved({ challenge: 'NoSQL Injection Tier 1' })
+    protractor.expect.challengeSolved({ challenge: 'NoSQL DoS' })
   })
 
   describe('challenge "NoSql Reviews Injection"', () => {
@@ -34,7 +34,7 @@ describe('/rest/products/reviews', () => {
       browser.driver.sleep(1000)
       browser.waitForAngularEnabled(true)
     })
-    protractor.expect.challengeSolved({ challenge: 'NoSQL Injection Tier 2' })
+    protractor.expect.challengeSolved({ challenge: 'NoSQL Manipulation' })
   })
 
   describe('challenge "NoSql Orders Injection"', () => {
@@ -54,7 +54,7 @@ describe('/rest/products/reviews', () => {
       browser.driver.sleep(1000)
       browser.waitForAngularEnabled(true)
     })
-    protractor.expect.challengeSolved({ challenge: 'NoSQL Injection Tier 3' })
+    protractor.expect.challengeSolved({ challenge: 'NoSQL Exfiltration' })
   })
 
   describe('challenge "Forged Review"', () => {
@@ -85,7 +85,7 @@ describe('/rest/products/reviews', () => {
           xhttp.open('PATCH', 'http://localhost:3000/rest/products/reviews', true)
           xhttp.setRequestHeader('Content-type', 'application/json')
           xhttp.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('token')}`)
-          xhttp.send(JSON.stringify({ 'id': reviewId, 'message': 'injected' }))
+          xhttp.send(JSON.stringify({ id: reviewId, message: 'injected' }))
         }
       })
       browser.driver.sleep(5000)
@@ -124,7 +124,7 @@ describe('/rest/products/reviews', () => {
           xhttp.open('POST', 'http://localhost:3000/rest/products/reviews', true)
           xhttp.setRequestHeader('Content-type', 'application/json')
           xhttp.setRequestHeader('Authorization', `Bearer ${localStorage.getItem('token')}`)
-          xhttp.send(JSON.stringify({ 'id': reviewId }))
+          xhttp.send(JSON.stringify({ id: reviewId }))
         }
       })
       browser.driver.sleep(5000)

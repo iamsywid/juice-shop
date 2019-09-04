@@ -4,6 +4,10 @@ application:
   showChallengeHints: false
   showVersionNumber: false
   showHackingInstructor: false
-  gitHubRibbon: false
+  showGitHubLinks: false
+  deluxePage:
+    deluxeDeliveryImage: delivery_ctf.png
+  welcomeBanner:
+    showOnFirstStart: false
 ctf:
   showFlagsInNotifications: true

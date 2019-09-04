@@ -2,46 +2,46 @@ var fs = require('fs')
 
 module.exports = function getLanguageList () {
   const iconMap = [
-    { key: 'en', icons: ['gb', 'us'], lang: 'English' },
-    { key: 'ar_SA', icons: ['ae', 'tn'], lang: 'عربى' },
-    { key: 'az_AZ', icons: ['az'], lang: 'Azərbaycanca' },
-    { key: 'bg_BG', icons: ['bg'], lang: 'български (език)' },
-    { key: 'ca_ES', icons: ['es-ct'], lang: 'Catalan' },
-    { key: 'cs_CZ', icons: ['cz'], lang: 'Česky' },
-    { key: 'da_DK', icons: ['dk'], lang: 'Dansk' },
-    { key: 'de_DE', icons: ['de'], lang: 'Deutsch' },
-    { key: 'el_GR', icons: ['gr'], lang: 'Ελληνικά' },
-    { key: 'es_ES', icons: ['es'], lang: 'Español' },
-    { key: 'et_EE', icons: ['ee'], lang: 'Eesti' },
-    { key: 'fi_FI', icons: ['fi'], lang: 'Suomalainen' },
-    { key: 'fr_FR', icons: ['fr'], lang: 'Français' },
-    { key: 'ka_GE', icons: ['ge'], lang: 'ქართული' },
-    { key: 'he_IL', icons: ['il'], lang: 'עברית' },
-    { key: 'hi_IN', icons: ['in'], lang: 'हिंदी' },
-    { key: 'hu_HU', icons: ['hu'], lang: 'Magyar' },
-    { key: 'id_ID', icons: ['id'], lang: 'Bahasa Indonesia' },
-    { key: 'it_IT', icons: ['it'], lang: 'Italiano' },
-    { key: 'ja_JP', icons: ['jp'], lang: '日本の' },
-    { key: 'ko_KR', icons: ['kr'], lang: '영어' },
-    { key: 'lt_LT', icons: ['lt'], lang: 'Lietuviešu' },
-    { key: 'lv_LV', icons: ['lv'], lang: 'Latvijas' },
-    { key: 'my_MM', icons: ['mm'], lang: 'ျမန္မာ' },
-    { key: 'nl_NL', icons: ['nl'], lang: 'Nederlands' },
-    { key: 'no_NO', icons: ['no'], lang: 'Norsk' },
-    { key: 'pl_PL', icons: ['pl'], lang: 'Język Polski' },
-    { key: 'pt_PT', icons: ['pt'], lang: 'Português' },
-    { key: 'pt_BR', icons: ['br'], lang: 'Português (Brasil)' },
-    { key: 'ro_RO', icons: ['ro'], lang: 'Românesc' },
-    { key: 'ru_RU', icons: ['ru'], lang: 'Pусский' },
-    { key: 'sv_SE', icons: ['se'], lang: 'Svenska' },
-    { key: 'tr_TR', icons: ['tr'], lang: 'Türkçe' },
-    { key: 'ur_PK', icons: ['pk'], lang: 'اردو' },
-    { key: 'zh_CN', icons: ['cn'], lang: '中国' },
-    { key: 'zh_HK', icons: ['hk'], lang: '繁體中文' }
+    { key: 'en', icons: ['gb', 'us'], shortKey: 'EN', lang: 'English' },
+    { key: 'ar_SA', icons: ['ae', 'tn'], shortKey: 'AR', lang: 'عربى' },
+    { key: 'az_AZ', icons: ['az'], shortKey: 'AZ', lang: 'Azərbaycanca' },
+    { key: 'bg_BG', icons: ['bg'], shortKey: 'BG', lang: 'български (език)' },
+    { key: 'ca_ES', icons: ['es-ct'], shortKey: 'CA', lang: 'Catalan' },
+    { key: 'cs_CZ', icons: ['cz'], shortKey: 'CS', lang: 'Česky' },
+    { key: 'da_DK', icons: ['dk'], shortKey: 'DA', lang: 'Dansk' },
+    { key: 'de_DE', icons: ['de'], shortKey: 'DE', lang: 'Deutsch' },
+    { key: 'el_GR', icons: ['gr'], shortKey: 'EL', lang: 'Ελληνικά' },
+    { key: 'es_ES', icons: ['es'], shortKey: 'ES', lang: 'Español' },
+    { key: 'et_EE', icons: ['ee'], shortKey: 'ET', lang: 'Eesti' },
+    { key: 'fi_FI', icons: ['fi'], shortKey: 'FI', lang: 'Suomalainen' },
+    { key: 'fr_FR', icons: ['fr'], shortKey: 'FR', lang: 'Français' },
+    { key: 'ka_GE', icons: ['ge'], shortKey: 'KA', lang: 'ქართული' },
+    { key: 'he_IL', icons: ['il'], shortKey: 'HE', lang: 'עברית' },
+    { key: 'hi_IN', icons: ['in'], shortKey: 'HI', lang: 'हिंदी' },
+    { key: 'hu_HU', icons: ['hu'], shortKey: 'HU', lang: 'Magyar' },
+    { key: 'id_ID', icons: ['id'], shortKey: 'ID', lang: 'Bahasa Indonesia' },
+    { key: 'it_IT', icons: ['it'], shortKey: 'IT', lang: 'Italiano' },
+    { key: 'ja_JP', icons: ['jp'], shortKey: 'JA', lang: '日本の' },
+    { key: 'ko_KR', icons: ['kr'], shortKey: 'KO', lang: '영어' },
+    { key: 'lt_LT', icons: ['lt'], shortKey: 'LT', lang: 'Lietuviešu' },
+    { key: 'lv_LV', icons: ['lv'], shortKey: 'LV', lang: 'Latvijas' },
+    { key: 'my_MM', icons: ['mm'], shortKey: 'MY', lang: 'ျမန္မာ' },
+    { key: 'nl_NL', icons: ['nl'], shortKey: 'NL', lang: 'Nederlands' },
+    { key: 'no_NO', icons: ['no'], shortKey: 'NO', lang: 'Norsk' },
+    { key: 'pl_PL', icons: ['pl'], shortKey: 'PL', lang: 'Język Polski' },
+    { key: 'pt_PT', icons: ['pt'], shortKey: 'PT', lang: 'Português' },
+    { key: 'pt_BR', icons: ['br'], shortKey: 'BR', lang: 'Português (Brasil)' },
+    { key: 'ro_RO', icons: ['ro'], shortKey: 'RO', lang: 'Românesc' },
+    { key: 'ru_RU', icons: ['ru'], shortKey: 'RU', lang: 'Pусский' },
+    { key: 'sv_SE', icons: ['se'], shortKey: 'SV', lang: 'Svenska' },
+    { key: 'tr_TR', icons: ['tr'], shortKey: 'TR', lang: 'Türkçe' },
+    { key: 'ur_PK', icons: ['pk'], shortKey: 'UR', lang: 'اردو' },
+    { key: 'zh_CN', icons: ['cn'], shortKey: 'CN', lang: '中国' },
+    { key: 'zh_HK', icons: ['hk'], shortKey: 'HK', lang: '繁體中文' }
   ]
 
   return (req, res, next) => {
-    let languages = []
+    const languages = []
     let count = 0
     let enContent
 
@@ -61,15 +61,16 @@ module.exports = function getLanguageList () {
           if (err) {
             next(new Error(`Unable to retrieve ${fileName} language file: ${err.message}`))
           }
-          let fileContent = JSON.parse(content)
-          let percentage = await calcPercentage(fileContent, enContent)
-          let key = fileName.substring(0, fileName.indexOf('.'))
+          const fileContent = JSON.parse(content)
+          const percentage = await calcPercentage(fileContent, enContent)
+          const key = fileName.substring(0, fileName.indexOf('.'))
           let iconObj = iconMap.find((x) => x.key === key)
           if (!iconObj) iconObj = ''
-          let dataObj = {
+          const dataObj = {
             key: key,
             lang: fileContent.LANGUAGE,
             icons: iconObj.icons,
+            shortKey: iconObj.shortKey,
             percentage: percentage,
             gauge: (percentage > 90 ? 'full' : (percentage > 70 ? 'three-quarters' : (percentage > 50 ? 'half' : (percentage > 30 ? 'quarter' : 'empty'))))
           }
@@ -78,7 +79,7 @@ module.exports = function getLanguageList () {
           }
           count++
           if (count === languageFiles.length) {
-            languages.push({ key: 'en', icons: ['gb', 'us'], lang: 'English', percentage: 100, gauge: 'full' })
+            languages.push({ key: 'en', icons: ['gb', 'us'], shortKey: 'EN', lang: 'English', percentage: 100, gauge: 'full' })
             languages.sort((a, b) => a.lang.localeCompare(b.lang))
             res.status(200).json(languages)
           }
@@ -87,12 +88,12 @@ module.exports = function getLanguageList () {
     })
 
     function calcPercentage (fileContent, enContent) {
-      let totalStrings = Object.keys(enContent).length
+      const totalStrings = Object.keys(enContent).length
       let differentStrings = 0
       return new Promise((resolve, reject) => {
         try {
-          for (let key in fileContent) {
-            if (fileContent.hasOwnProperty(key) && fileContent[key] !== enContent[key]) {
+          for (const key in fileContent) {
+            if (Object.prototype.hasOwnProperty.call(fileContent, key) && fileContent[key] !== enContent[key]) {
               differentStrings++
             }
           }

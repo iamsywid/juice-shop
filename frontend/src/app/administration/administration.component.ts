@@ -21,7 +21,7 @@ export class AdministrationComponent implements OnInit {
   public userColumns = ['user','email','user_detail']
   public feedbackDataSource: any
   public feedbackColumns = ['user', 'comment', 'rating', 'remove']
-  public error
+  public error: any
   constructor (private dialog: MatDialog, private userService: UserService, private feedbackService: FeedbackService, private sanitizer: DomSanitizer) {}
 
   ngOnInit () {
@@ -34,7 +34,7 @@ export class AdministrationComponent implements OnInit {
     this.userService.find().subscribe((users) => {
       this.userDataSource = users
       for (let user of this.userDataSource) {
-        user.email = this.sanitizer.bypassSecurityTrustHtml(user.email)
+        user.email = this.sanitizer.bypassSecurityTrustHtml(`<span class="${user.token ? 'confirmation' : 'error'}">${user.email}</span>`)
       }
     },(err) => {
       this.error = err

@@ -5,14 +5,13 @@ application:
   name: 'OWASP Juice Shop'
   logo: JuiceShop_Logo.png
   favicon: favicon_js.ico
-  numberOfRandomFakeUsers: 0
+  theme: bluegrey-lightgreen # Options: bluegrey-lightgreen blue-lightblue deeppurple-amber indigo-pink pink-bluegrey purple-green deeporange-indigo
   showChallengeSolvedNotifications: true
   showChallengeHints: true
   showVersionNumber: true
   showHackingInstructor: true
-  theme: bluegrey-lightgreen # Options: bluegrey-lightgreen blue-lightblue deeppurple-amber indigo-pink pink-bluegrey purple-green deeporange-indigo
-  gitHubRibbon: true
-  hideWelcome: false
+  showGitHubLinks: true
+  numberOfRandomFakeUsers: 0
   twitterUrl: 'https://twitter.com/owasp_juiceshop'
   facebookUrl: 'https://www.facebook.com/owasp.juiceshop'
   slackUrl: 'http://owaspslack.com'
@@ -20,10 +19,16 @@ application:
   pressKitUrl: 'https://github.com/OWASP/owasp-swag/tree/master/projects/juice-shop'
   planetOverlayMap: orangemap2k.jpg
   planetName: Orangeuze
+  deluxePage:
+    deluxeDeliveryImage: delivery_juiceshop.png
   recyclePage:
     topProductImage: fruit_press.jpg
     bottomProductImage: apple_pressings.jpg
   altcoinName: Juicycoin
+  welcomeBanner:
+    showOnFirstStart: true
+    title: 'Welcome to OWASP Juice Shop!'
+    message: "<p>Being a web application with a vast number of intended security vulnerabilities, the <strong>OWASP Juice Shop</strong> is supposed to be the opposite of a best practice or template application for web developers: It is an awareness, training, demonstration and exercise tool for security risks in modern web applications. The <strong>OWASP Juice Shop</strong> is an open-source project hosted by the non-profit <a href='https://owasp.org' target='_blank'>Open Web Application Security Project (OWASP)</a> and is developed and maintained by volunteers. Check out the link below for more information and documentation on the project.</p><h1><a href='http://owasp-juice.shop' target='_blank'>http://owasp-juice.shop</a></h1>"
   cookieConsent:
     backgroundColor: '#546e7a'
     textColor: '#ffffff'
@@ -48,6 +53,7 @@ products:
   -
     name: 'Apple Juice (1000ml)'
     price: 1.99
+    deluxePrice: 0.99
     description: 'The all-time classic.'
     image: apple_juice.jpg
     reviews: # Options 'author': admin, jim, bender, ciso, support, morty, mc.safesearch
@@ -56,6 +62,7 @@ products:
     name: 'Orange Juice (1000ml)'
     description: 'Made from oranges hand-picked by Uncle Dittmeyer.'
     price: 2.99
+    deluxePrice: 2.49
     image: orange_juice.jpg
   -
     name: 'Eggfruit Juice (500ml)'
@@ -73,6 +80,7 @@ products:
     name: 'Lemon Juice (500ml)'
     description: 'Sour but full of vitamins.'
     price: 2.99
+    deluxePrice: 1.99
     image: lemon_juice.jpg
   -
     name: 'Banana Juice (1000ml)'
@@ -138,7 +146,7 @@ products:
     price: 4.99
     image: sticker_single.jpg
   -
-    name: 'OWASP Juice Shop Temporay Tattoos (16pcs)'
+    name: 'OWASP Juice Shop Temporary Tattoos (16pcs)'
     description: 'Get one of these <a href="https://www.stickeryou.com/products/owasp-juice-shop/794" target="_blank">temporary tattoos</a> to proudly wear the OWASP Juice Shop or CTF Extension logo on your skin! If you tweet a photo of yourself with the tattoo, you get a couple of our stickers for free! Please mention <a href="https://twitter.com/owasp_juiceshop" target="_blank"><code>@owasp_juiceshop</code></a> in your tweet!'
     price: 14.99
     image: tattoo.jpg
@@ -158,6 +166,7 @@ products:
     name: 'OWASP Juice Shop-CTF Velcro Patch'
     description: '4x3.5" embroidered patch with velcro backside. The ultimate decal for every tactical bag or backpack!'
     price: 2.92
+    quantity: 5
     image: velcro-patch.jpg
     reviews:
       - { text: 'This thang would look phat on Bobby''s jacked fur coat!', author: mc.safesearch }
@@ -199,6 +208,7 @@ products:
     name: 'Juice Shop Artwork'
     description: 'Unique masterpiece painted with different kinds of juice on 90g/m² lined paper.'
     price: 278.74
+    quantity: 1
     image: artwork.jpg
   -
     name: 'Global OWASP WASPY Award 2017 Nomnation'
@@ -233,11 +243,13 @@ products:
     name: 'Melon Bike (Comeback-Product 2018 Edition)'
     description: 'The wheels of this bicycle are made from real water melons. You might not want to ride it up/down the curb too hard.'
     price: 2999
+    quantity: 3
     image: melon_bike.jpeg
   -
     name: 'OWASP Juice Shop Coaster (10pcs)'
     description: 'Our 95mm circle coasters are printed in full color and made from thick, premium coaster board.'
     price: 19.99
+    quantity: 0
     image: coaster.png
 ctf:
   showFlagsInNotifications: false

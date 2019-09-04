@@ -6,7 +6,7 @@ describe('/#/register', () => {
     browser.get('/#/register')
   })
 
-  describe('challenge "xss2"', () => {
+  describe('challenge "persistedXssUser"', () => {
     protractor.beforeEach.login({ email: 'admin@' + config.get('application.domain'), password: 'admin123' })
 
     it('should be possible to bypass validation by directly using Rest API', () => {
@@ -20,7 +20,7 @@ describe('/#/register', () => {
 
         xhttp.open('POST', 'http://localhost:3000/api/Users/', true)
         xhttp.setRequestHeader('Content-type', 'application/json')
-        xhttp.send(JSON.stringify({ 'email': '<iframe src="javascript:alert(`xss`)">', 'password': 'XSSed', 'passwordRepeat': 'XSSed', 'isAdmin': true }))
+        xhttp.send(JSON.stringify({ email: '<iframe src="javascript:alert(`xss`)">', password: 'XSSed', passwordRepeat: 'XSSed', role: 'admin' }))
       })
 
       browser.waitForAngularEnabled(false)
@@ -44,7 +44,7 @@ describe('/#/register', () => {
       browser.waitForAngularEnabled(true)
     })
 
-    protractor.expect.challengeSolved({ challenge: 'XSS Tier 2' })
+    protractor.expect.challengeSolved({ challenge: 'Client-side XSS Protection' })
   })
 
   describe('challenge "registerAdmin"', () => {
@@ -59,7 +59,7 @@ describe('/#/register', () => {
 
         xhttp.open('POST', 'http://localhost:3000/api/Users/', true)
         xhttp.setRequestHeader('Content-type', 'application/json')
-        xhttp.send(JSON.stringify({ 'email': 'testing@test.com', 'password': 'pwned', 'passwordRepeat': 'pwned', 'isAdmin': true }))
+        xhttp.send(JSON.stringify({ email: 'testing@test.com', password: 'pwned', passwordRepeat: 'pwned', role: 'admin' }))
       })
     })
 
@@ -78,7 +78,7 @@ describe('/#/register', () => {
 
         xhttp.open('POST', 'http://localhost:3000/api/Users/', true)
         xhttp.setRequestHeader('Content-type', 'application/json')
-        xhttp.send(JSON.stringify({ 'email': 'uncle@bob.com', 'password': 'ThereCanBeOnlyOne' }))
+        xhttp.send(JSON.stringify({ email: 'uncle@bob.com', password: 'ThereCanBeOnlyOne' }))
       })
     })
 

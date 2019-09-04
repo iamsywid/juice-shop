@@ -2,20 +2,30 @@ const utils = require('../lib/utils')
 const insecurity = require('../lib/insecurity')
 const db = require('../data/mongodb')
 const challenges = require('../data/datacache').challenges
+const models = require('../models/index')
 
 module.exports = function dataExport () {
-  return (req, res, next) => {
+  return async (req, res, next) => {
     const loggedInUser = insecurity.authenticatedUsers.get(req.headers.authorization.replace('Bearer ', ''))
     if (loggedInUser && loggedInUser.data && loggedInUser.data.email && loggedInUser.data.id) {
       const username = loggedInUser.data.username
       const email = loggedInUser.data.email
       const updatedEmail = email.replace(/[aeiou]/gi, '*')
-      let userData = {
+      const userData = {
         username,
         email,
         orders: [],
-        reviews: []
+        reviews: [],
+        memories: []
       }
+
+      const memories = await models.Memory.findAll({ where: { UserId: req.body.UserId } })
+      memories.map(memory => {
+        userData.memories.push({
+          imageUrl: req.protocol + '://' + req.get('host') + '/' + memory.imagePath,
+          caption: memory.caption
+        })
+      })
 
       db.orders.find({ email: updatedEmail }).then(orders => {
         if (orders.length > 0) {
@@ -43,7 +53,7 @@ module.exports = function dataExport () {
             })
           }
           const emailHash = insecurity.hash(email).slice(0, 4)
-          for (let order of userData.orders) {
+          for (const order of userData.orders) {
             if (order.orderId.split('-')[0] !== emailHash && utils.notSolved(challenges.dataExportChallenge)) {
               utils.solve(challenges.dataExportChallenge)
             }

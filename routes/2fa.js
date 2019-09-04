@@ -35,7 +35,7 @@ async function verify (req, res) {
       utils.solve(challenges.twoFactorAuthUnsafeSecretStorageChallenge)
     }
 
-    const [ basket ] = await models.Basket.findOrCreate({ where: { userId }, defaults: {} })
+    const [basket] = await models.Basket.findOrCreate({ where: { userId }, defaults: {} })
 
     const token = insecurity.authorize(plainUser)
     plainUser.bid = basket.id // keep track of original basket for challenge solution check
@@ -102,7 +102,7 @@ async function setup (req, res) {
     const { password, setupToken, initialToken } = req.body
 
     if (user.password !== insecurity.hash(password)) {
-      throw new Error('Passoword doesnt match stored password')
+      throw new Error('Password doesnt match stored password')
     }
 
     if (user.totpSecret !== '') {
@@ -143,7 +143,7 @@ async function disable (req, res) {
     const { password } = req.body
 
     if (user.password !== insecurity.hash(password)) {
-      throw new Error('Passoword doesnt match stored password')
+      throw new Error('Password doesnt match stored password')
     }
 
     // Update db model and cached object

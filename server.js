@@ -19,7 +19,13 @@ const yaml = require('js-yaml')
 const swaggerUi = require('swagger-ui-express')
 const RateLimit = require('express-rate-limit')
 const swaggerDocument = yaml.load(fs.readFileSync('./swagger.yml', 'utf8'))
-const fileUpload = require('./routes/fileUpload')
+const {
+  ensureFileIsPassed,
+  handleZipFileUpload,
+  checkUploadSize,
+  checkFileType,
+  handleXmlUpload
+} = require('./routes/fileUpload')
 const profileImageFileUpload = require('./routes/profileImageFileUpload')
 const profileImageUrlUpload = require('./routes/profileImageUrlUpload')
 const redirect = require('./routes/redirect')
@@ -72,7 +78,39 @@ const languageList = require('./routes/languages')
 const config = require('config')
 const imageCaptcha = require('./routes/imageCaptcha')
 const dataExport = require('./routes/dataExport')
+const address = require('./routes/address')
 const erasureRequest = require('./routes/erasureRequest')
+const payment = require('./routes/payment')
+const wallet = require('./routes/wallet')
+const orderHistory = require('./routes/orderHistory')
+const delivery = require('./routes/delivery')
+const deluxe = require('./routes/deluxe')
+const memory = require('./routes/memory')
+
+const mimeTypeMap = {
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg'
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const isValid = mimeTypeMap[file.mimetype]
+    let error = new Error('Invalid mime type')
+    if (isValid) {
+      error = null
+    }
+    cb(error, './frontend/dist/frontend/assets/public/images/uploads/')
+  },
+  filename: (req, file, cb) => {
+    const name = file.originalname
+      .toLowerCase()
+      .split(' ')
+      .join('-')
+    const ext = mimeTypeMap[file.mimetype]
+    cb(null, name + '-' + Date.now() + '.' + ext)
+  }
+})
 
 errorhandler.title = `${config.get('application.name')} (Express ${utils.version('express')})`
 
@@ -126,15 +164,15 @@ app.use('/assets/i18n', verify.accessControlChallenges())
 app.use('/solve/challenges/server-side', verify.serverSideChallenges())
 
 /* /ftp directory browsing and file download */
-app.use('/ftp', serveIndex('ftp', { 'icons': true }))
+app.use('/ftp', serveIndex('ftp', { icons: true }))
 app.use('/ftp/:file', fileServer())
 
 /* /encryptionkeys directory browsing */
-app.use('/encryptionkeys', serveIndex('encryptionkeys', { 'icons': true, 'view': 'details' }))
+app.use('/encryptionkeys', serveIndex('encryptionkeys', { icons: true, view: 'details' }))
 app.use('/encryptionkeys/:file', keyServer())
 
 /* /logs directory browsing */
-app.use('/support/logs', serveIndex('logs', { 'icons': true, 'view': 'details' }))
+app.use('/support/logs', serveIndex('logs', { icons: true, view: 'details' }))
 app.use('/support/logs', verify.accessControlChallenges())
 app.use('/support/logs/:file', logFileServer())
 
@@ -148,9 +186,10 @@ app.use(cookieParser('kekse'))
 
 app.use(bodyParser.urlencoded({ extended: true }))
 /* File Upload */
-app.post('/file-upload', upload.single('file'), fileUpload())
+app.post('/file-upload', upload.single('file'), ensureFileIsPassed, handleZipFileUpload, checkUploadSize, checkFileType, handleXmlUpload)
 app.post('/profile/image/file', upload.single('file'), profileImageFileUpload())
 app.post('/profile/image/url', upload.single('file'), profileImageUrlUpload())
+app.post('/api/Memorys', multer({ storage: storage }).single('image'), insecurity.appendUserId(), memory.addMemory())
 
 app.use(bodyParser.text({ type: '*/*' }))
 app.use(function jsonParser (req, res, next) {
@@ -163,18 +202,28 @@ app.use(function jsonParser (req, res, next) {
   next()
 })
 /* HTTP request logging */
-let accessLogStream = require('file-stream-rotator').getStream({ filename: './logs/access.log', frequency: 'daily', verbose: false, max_logs: '2d' })
+const accessLogStream = require('file-stream-rotator').getStream({
+  filename: './logs/access.log',
+  frequency: 'daily',
+  verbose: false,
+  max_logs: '2d'
+})
 app.use(morgan('combined', { stream: accessLogStream }))
 
 /* Rate limiting */
 app.enable('trust proxy')
-app.use('/rest/user/reset-password', new RateLimit({ windowMs: 5 * 60 * 1000, max: 100, keyGenerator ({ headers, ip }) { return headers['X-Forwarded-For'] || ip }, delayMs: 0 }))
+app.use('/rest/user/reset-password', new RateLimit({
+  windowMs: 5 * 60 * 1000,
+  max: 100,
+  keyGenerator ({ headers, ip }) { return headers['X-Forwarded-For'] || ip },
+  delayMs: 0
+}))
 
 /** Authorization **/
 /* Checks on JWT in Authorization header */
 app.use(verify.jwtChallenges())
 /* Baskets: Unauthorized users are not allowed to access baskets */
-app.use('/rest/basket', insecurity.isAuthorized())
+app.use('/rest/basket', insecurity.isAuthorized(), insecurity.appendUserId())
 /* BasketItems: API only accessible for authenticated users */
 app.use('/api/BasketItems', insecurity.isAuthorized())
 app.use('/api/BasketItems/:id', insecurity.isAuthorized())
@@ -225,13 +274,38 @@ app.post('/api/Users', verify.registerAdminChallenge())
 app.post('/api/Users', verify.passwordRepeatChallenge())
 /* Unauthorized users are not allowed to access B2B API */
 app.use('/b2b/v2', insecurity.isAuthorized())
-/* Add item to basket */
-app.post('/api/BasketItems', basketItems())
+/* Check if the quantity is available and add item to basket */
+app.put('/api/BasketItems/:id', insecurity.appendUserId(), basketItems.quantityCheckBeforeBasketItemUpdate())
+app.post('/api/BasketItems', insecurity.appendUserId(), basketItems.quantityCheckBeforeBasketItemAddition(), basketItems.addBasketItem())
+/* Accounting users are allowed to check and update quantities */
+app.delete('/api/Quantitys/:id', insecurity.denyAll())
+app.post('/api/Quantitys', insecurity.denyAll())
+app.use('/api/Quantitys/:id', insecurity.isAccounting())
 /* Feedbacks: Do not allow changes of existing feedback */
 app.put('/api/Feedbacks/:id', insecurity.denyAll())
 /* PrivacyRequests: Only allowed for authenticated users */
 app.use('/api/PrivacyRequests', insecurity.isAuthorized())
 app.use('/api/PrivacyRequests/:id', insecurity.isAuthorized())
+/* PaymentMethodRequests: Only allowed for authenticated users */
+app.post('/api/Cards', insecurity.appendUserId())
+app.get('/api/Cards', insecurity.appendUserId(), payment.getPaymentMethods())
+app.put('/api/Cards/:id', insecurity.denyAll())
+app.delete('/api/Cards/:id', insecurity.appendUserId(), payment.delPaymentMethodById())
+app.get('/api/Cards/:id', insecurity.appendUserId(), payment.getPaymentMethodById())
+/* PrivacyRequests: Only POST allowed for authenticated users */
+app.post('/api/PrivacyRequests', insecurity.isAuthorized())
+app.get('/api/PrivacyRequests', insecurity.denyAll())
+app.use('/api/PrivacyRequests/:id', insecurity.denyAll())
+
+app.post('/api/Addresss', insecurity.appendUserId())
+app.get('/api/Addresss', insecurity.appendUserId(), address.getAddress())
+app.put('/api/Addresss/:id', insecurity.appendUserId())
+app.delete('/api/Addresss/:id', insecurity.appendUserId(), address.delAddressById())
+app.get('/api/Addresss/:id', insecurity.appendUserId(), address.getAddressById())
+app.get('/api/Wallets/', insecurity.appendUserId(), wallet.getWalletBalance())
+app.put('/api/Wallets/', insecurity.appendUserId(), wallet.addWalletBalance())
+app.get('/api/Deliverys', delivery.getDeliveryMethods())
+app.get('/api/Deliverys/:id', delivery.getDeliveryMethod())
 
 /* Verify the 2FA Token */
 app.post('/rest/2fa/verify',
@@ -269,7 +343,10 @@ const autoModels = [
   { name: 'Recycle', exclude: [] },
   { name: 'SecurityQuestion', exclude: [] },
   { name: 'SecurityAnswer', exclude: [] },
-  { name: 'PrivacyRequest', exclude: [] }
+  { name: 'Address', exclude: [] },
+  { name: 'PrivacyRequest', exclude: [] },
+  { name: 'Card', exclude: [] },
+  { name: 'Quantity', exclude: [] }
 ]
 
 for (const { name, exclude } of autoModels) {
@@ -278,6 +355,16 @@ for (const { name, exclude } of autoModels) {
     endpoints: [`/api/${name}s`, `/api/${name}s/:id`],
     excludeAttributes: exclude
   })
+
+  // create a wallet when a new user is registered using API
+  if (name === 'User') {
+    resource.create.send.before((req, res, context) => {
+      models.Wallet.create({ UserId: context.instance.id }).catch((err) => {
+        console.log(err)
+      })
+      return context.continue
+    })
+  }
 
   // fix the api difference between finale (fka epilogue) and previously used sequlize-restful
   resource.all.send.before((req, res, context) => {
@@ -312,16 +399,21 @@ app.get('/rest/image-captcha', imageCaptcha())
 app.get('/rest/track-order/:id', trackOrder())
 app.get('/rest/country-mapping', countryMapping())
 app.get('/rest/saveLoginIp', saveLoginIp())
-app.post('/rest/data-export', imageCaptcha.verifyCaptcha())
-app.post('/rest/data-export', dataExport())
+app.post('/rest/user/data-export', insecurity.appendUserId(), imageCaptcha.verifyCaptcha())
+app.post('/rest/user/data-export', insecurity.appendUserId(), dataExport())
 app.get('/rest/languages', languageList())
-app.get('/rest/user/erasure-request', erasureRequest())
-
+app.post('/rest/user/erasure-request', erasureRequest())
+app.get('/rest/order-history', orderHistory.orderHistory())
+app.get('/rest/order-history/orders', insecurity.isAccounting(), orderHistory.allOrders())
+app.put('/rest/order-history/:id/delivery-status', insecurity.isAccounting(), orderHistory.toggleDeliveryStatus())
 /* NoSQL API endpoints */
 app.get('/rest/products/:id/reviews', showProductReviews())
 app.put('/rest/products/:id/reviews', createProductReviews())
 app.patch('/rest/products/reviews', insecurity.isAuthorized(), updateProductReviews())
 app.post('/rest/products/reviews', insecurity.isAuthorized(), likeProductReviews())
+app.get('/api/Memorys', memory.getMemory())
+app.get('/rest/deluxe-status', deluxe.deluxeMembershipStatus())
+app.post('/rest/upgrade-deluxe', insecurity.appendUserId(), deluxe.upgradeToDeluxe())
 
 /* B2B Order API */
 app.post('/b2b/v2/orders', b2bOrder())

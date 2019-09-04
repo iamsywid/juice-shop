@@ -4,7 +4,7 @@ const insecurity = require('../../lib/insecurity')
 
 const API_URL = 'http://localhost:3000/api'
 
-const authHeader = { 'Authorization': 'Bearer ' + insecurity.authorize(), 'content-type': 'application/json' }
+const authHeader = { Authorization: 'Bearer ' + insecurity.authorize(), 'content-type': 'application/json' }
 
 describe('/api/Recycles', () => {
   it('POST new recycle', () => {
@@ -12,7 +12,7 @@ describe('/api/Recycles', () => {
       headers: authHeader,
       body: {
         quantity: 200,
-        address: 'Bjoern Kimminich, 123 Juicy Road, Test City',
+        AddressId: '1',
         isPickup: true,
         date: '2017-05-31'
       }

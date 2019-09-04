@@ -1,4 +1,4 @@
-# References
+# References [![Mentioned in Awesome AppSec](https://awesome.re/mentioned-badge.svg)](https://github.com/paragonie/awesome-appsec)
 
 Did you write a blog post, magazine article or do a podcast about or
 mentioning OWASP Juice Shop? Add it to this file and open a PR! The same
@@ -102,6 +102,10 @@ where this project was mentioned or used!
 
 ### Blogs & Articles
 
+* Blog post on [klarsen.net - A Maker's Blog](https://klarsen.net):
+  [OWASP Juice Shop SQLi](https://klarsen.net/python/owasp-juice-shop-sqli/)
+* White paper by Kelley Bryant:
+  [OWASP: Application Security's Best Friend](https://drive.google.com/file/d/0ByCGDrCX7bx7dnB0TGJJSnNzRmhtUUE4U1RfR3d0YVl4RHFr/view)
 * Article (:es:) on Medium by
   [Elzer Pineda](https://medium.com/@elzerjp):
   [Null Byte Attack Juice Shop y algo mas!!](https://medium.com/@elzerjp/null-byte-attack-juice-shop-y-algo-mas-2c6d271b2fd5)
@@ -211,6 +215,23 @@ where this project was mentioned or used!
   12.-16.06.2017
 
 ## Conference and Meetup Appearances
+
+#### Upcoming
+
+* [Elbsides vs. Juice Shop](https://2019.elbsides.de/programme.html#elbsides-vs-juice-shop)
+  workshop with Björn Kimminich,
+  [Elbsides 2019](https://2019.elbsides.de), 16.09.2019
+* [Juice Shop](https://globalappsecamsterdam2019.sched.com/event/U84e/juice-shop)
+  by Björn Kimminich, Project Showcase track of the
+  [Global AppSec Amsterdam 2019](https://ams.globalappsec.org/),
+  26.09.2019
+* [OWASP Juice Shop: The ultimate All Vuln WebApp](https://www.alldaydevops.com/addo-speakers/bj%C3%B6rn-kimminich)
+  by Björn Kimminich, [All Day DevOps](https://www.alldaydevops.com/),
+  06.11.2019
+* [S' OWASP Saft-Lädeli / The OWASP Juice Shop](https://www.meetup.com/de-DE/OWASPSwitzerland/events/264422942/)
+  by Björn Kimminich,
+  [OWASP Switzerland Chapter Meeting](https://www.meetup.com/de-DE/OWASPSwitzerland/),
+  18.11.2019
 
 #### 2019
 

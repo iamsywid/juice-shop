@@ -6,7 +6,8 @@ const config = require('config')
 
 const REST_URL = 'http://localhost:3000/rest'
 
-const authHeader = { 'Authorization': 'Bearer ' + insecurity.authorize(), 'content-type': 'application/json' }
+const jsonHeader = { 'content-type': 'application/json' }
+const authHeader = { Authorization: 'Bearer ' + insecurity.authorize(), 'content-type': 'application/json' }
 
 describe('/rest/products/:id/reviews', () => {
   const reviewResponseSchema = {
@@ -91,13 +92,24 @@ describe('/rest/products/reviews', () => {
   })
 
   it('POST single product review can be liked', () => {
-    return frisby.patch(REST_URL + '/products/reviews', {
-      headers: authHeader,
+    return frisby.post(REST_URL + '/user/login', {
+      headers: jsonHeader,
       body: {
-        id: reviewId
+        email: 'bjoern.kimminich@gmail.com',
+        password: 'bW9jLmxpYW1nQGhjaW5pbW1pay5ucmVvamI='
       }
     })
       .expect('status', 200)
+      .then(({ json: jsonLogin }) => {
+        return frisby.post(REST_URL + '/products/reviews', {
+          headers: { Authorization: 'Bearer ' + jsonLogin.authentication.token },
+          body: {
+            id: reviewId
+          }
+        })
+          .expect('status', 200)
+          .expect('jsonTypes', { likesCount: Joi.number() })
+      })
   })
 
   it('PATCH multiple product review via injection', () => {
@@ -107,7 +119,7 @@ describe('/rest/products/reviews', () => {
     return frisby.patch(REST_URL + '/products/reviews', {
       headers: authHeader,
       body: {
-        id: { '$ne': -1 },
+        id: { $ne: -1 },
         message: 'trololololololololololololololololololololololololololol'
       }
     })

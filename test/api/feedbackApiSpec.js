@@ -5,7 +5,7 @@ const insecurity = require('../../lib/insecurity')
 const API_URL = 'http://localhost:3000/api'
 const REST_URL = 'http://localhost:3000/rest'
 
-const authHeader = { 'Authorization': 'Bearer ' + insecurity.authorize(), 'content-type': /application\/json/ }
+const authHeader = { Authorization: 'Bearer ' + insecurity.authorize(), 'content-type': /application\/json/ }
 const jsonHeader = { 'content-type': 'application/json' }
 
 describe('/api/Feedbacks', () => {
@@ -106,8 +106,8 @@ describe('/api/Feedbacks', () => {
     return frisby.post(REST_URL + '/user/login', {
       headers: jsonHeader,
       body: {
-        email: 'bjoern.kimminich@googlemail.com',
-        password: 'bW9jLmxpYW1lbGdvb2dAaGNpbmltbWlrLm5yZW9qYg=='
+        email: 'bjoern.kimminich@gmail.com',
+        password: 'bW9jLmxpYW1nQGhjaW5pbW1pay5ucmVvamI='
       }
     })
       .expect('status', 200)
@@ -117,7 +117,7 @@ describe('/api/Feedbacks', () => {
           .expect('header', 'content-type', /application\/json/)
           .then(({ json }) => {
             return frisby.post(API_URL + '/Feedbacks', {
-              headers: { 'Authorization': 'Bearer ' + jsonLogin.authentication.token, 'content-type': 'application/json' },
+              headers: { Authorization: 'Bearer ' + jsonLogin.authentication.token, 'content-type': 'application/json' },
               body: {
                 comment: 'Stupid JWT secret "' + insecurity.defaultSecret + '" and being typosquatted by epilogue-js and ng2-bar-rating!',
                 rating: 5,
@@ -139,8 +139,8 @@ describe('/api/Feedbacks', () => {
     return frisby.post(REST_URL + '/user/login', {
       headers: jsonHeader,
       body: {
-        email: 'bjoern.kimminich@googlemail.com',
-        password: 'bW9jLmxpYW1lbGdvb2dAaGNpbmltbWlrLm5yZW9qYg=='
+        email: 'bjoern.kimminich@gmail.com',
+        password: 'bW9jLmxpYW1nQGhjaW5pbW1pay5ucmVvamI='
       }
     })
       .expect('status', 200)
@@ -150,7 +150,7 @@ describe('/api/Feedbacks', () => {
           .expect('header', 'content-type', /application\/json/)
           .then(({ json }) => {
             return frisby.post(API_URL + '/Feedbacks', {
-              headers: { 'Authorization': 'Bearer ' + jsonLogin.authentication.token, 'content-type': 'application/json' },
+              headers: { Authorization: 'Bearer ' + jsonLogin.authentication.token, 'content-type': 'application/json' },
               body: {
                 comment: 'Bender\'s choice award!',
                 rating: 5,
